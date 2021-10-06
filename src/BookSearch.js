@@ -13,9 +13,9 @@ class BookSearch extends Component {
     if (query !== null && query !== "") {
       BooksAPI.search(query).then((books) => {
         if (!books.error) {
-          this.setState(() => ({ searchedBooks: books, query: query.trim() }));
+          this.setState(() => ({ searchedBooks: books, query: query }));
         } else {
-          this.setState(() => ({ searchedBooks: [], query: query.trim() }));
+          this.setState(() => ({ searchedBooks: [], query: query }));
         }
       });
     } else {
@@ -28,6 +28,8 @@ class BookSearch extends Component {
     var selectBook = books.filter((_) => _.id === b.id);
     if (selectBook.length > 0) {
       b.shelf = selectBook[0].shelf;
+    } else {
+      b.shelf = "none";
     }
 
     return b;
