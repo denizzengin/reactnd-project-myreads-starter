@@ -10,20 +10,19 @@ class BooksApp extends React.Component {
     books: [],
     searchedBooks: [],
   };
-  componentDidMount() {
-    BooksAPI.getAll().then((books) => {
-      this.setState(() => ({ books }));
-    });
+  async componentDidMount() {
+    const books = await BooksAPI.getAll();
+    this.setState(() => ({ books }));
   }
 
-  updateBook = (book, shelf) => {
+  updateBook(book, shelf) {
     book.shelf = shelf;
     BooksAPI.update(book, shelf).then(() => {
       this.setState((currentBooks) => ({
         books: [...currentBooks.books.filter((b) => b.id !== book.id), book],
       }));
     });
-  };
+  }
 
   render() {
     return (
