@@ -18,37 +18,22 @@ class BooksApp extends React.Component {
 
   updateBook = (book, shelf) => {
     book.shelf = shelf;
-    const { books } = this.state;
-    let comingBook = books.filter((b) => b.id === book.id);
-    if (comingBook.length <= 0) {
-      book && books.push(book);
-    } else {
-      comingBook[0].shelf = shelf;
-      BooksAPI.update(book, shelf);
-    }
-    this.setState(() => ({ books: books }));
+    BooksAPI.update(book, shelf).then(() => {
+      this.setState((currentBooks) => ({
+        books: [...currentBooks.books.filter((b) => b.id !== book.id), book],
+      }));
+    });
   };
 
   render() {
     return (
       <div className="app">
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <BookCategory
-              books={this.state.books}
-              updateBook={this.updateBook}
-            />
-          )}
-        />
-        <Route
-          exact
-          path="/search"
-          render={() => (
-            <BookSearch books={this.state.books} updateBook={this.updateBook} />
-          )}
-        />
+        <Route exact path="/">
+          <BookCategory books={this.state.books} updateBook={this.updateBook} />
+        </Route>
+        <Route exact path="/search">
+          <BookSearch books={this.state.books} updateBook={this.updateBook} />
+        </Route>
       </div>
     );
   }

@@ -9,19 +9,19 @@ class BookSearch extends Component {
     searchedBooks: [],
   };
 
-  updateQuery = (query) => {
+  async updateQuery(query) {
     if (query !== null && query !== "") {
-      BooksAPI.search(query).then((books) => {
-        if (!books.error) {
-          this.setState(() => ({ searchedBooks: books, query: query }));
-        } else {
-          this.setState(() => ({ searchedBooks: [], query: query }));
-        }
-      });
+      this.setState(() => ({ query: query }));
+      const books = await BooksAPI.search(query);
+      if (!books.error) {
+        this.setState(() => ({ searchedBooks: books }));
+      } else {
+        this.setState(() => ({ searchedBooks: [] }));
+      }
     } else {
       this.setState(() => ({ query: query.trim(), searchedBooks: [] }));
     }
-  };
+  }
 
   getBook = (b) => {
     const { books } = this.props;
